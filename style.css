@@ -1,0 +1,68 @@
+/* Use a more-intuitive box-sizing model */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* Remove default margins */
+* {
+  margin: 0;
+}
+
+/* Allow percentage-based heights in the application */
+html, body {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  width: 300px;
+  height: 500px;
+  background-color: rgb(216, 216, 235);
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgb(137, 137, 157);
+  border-radius: 10px;
+}
+
+.display {
+  height: 60px;
+  margin: 20px 15px 20px 15px;
+  background-color: white;
+  border: 2px solid rgb(137, 137, 157);
+  border-radius: 5px;
+}
+
+.row {
+  height: 60px;
+  margin: 0 15px 10px 15px;
+  display: flex;
+  justify-content: space-between;
+  border: none;
+  background-color: rgb(216, 216, 235);
+}
+
+.btn {
+  width: 60px;
+  font-size: 22px;
+  background-color: white;
+  border: none;
+  border-radius: 10px;
+}
+
+.operator {
+  background-color: #FFCC00;
+}
+
+.clear {
+  text-transform: uppercase;
+}
+
+.specialOp {
+  background-color: rgb(173, 173, 201);
+}
+
+.boldText {
+  font-weight: bold;
+}
