@@ -185,3 +185,71 @@ function roundResult(num) {
   return Math.round(num * 10**7) / 10**7;
 }
 
+window.addEventListener('keydown', (e) => {
+  const key = e.key;
+
+  if(!isNaN(key) && key != ' ') {
+    handleNumber(key);
+  }
+
+  switch (key) {
+    case '+':
+      handleOperator('add');
+      break;
+    case '-':
+      handleOperator('subtract');
+      break;
+    case '*':
+      handleOperator('multiply');
+      break;
+    case '/':
+      e.preventDefault();
+      handleOperator('divide');
+      break;
+    case 'Enter':
+    case '=':
+      e.preventDefault();
+      handleAction('calculate');
+      break;
+    case 'Backspace':
+      handleAction('delete');
+      break;
+    case 'Escape':
+      handleAction('clear');
+      break;
+    case '.':
+      handleAction('decimal');
+      break;
+  }
+
+  display.innerText = displayValue;
+
+  let selector = '';
+
+  if (!isNaN(key)) {
+    selector = `[data-number="${key}"]`;
+  } else {
+    const keyMap = {
+      '+': 'add',
+      '-': 'subtract',
+      '*': 'multiply',
+      '/': 'divide',
+      'Enter': 'calculate',
+      '=': 'calculate',
+      'Backspace': 'delete',
+      'Escape': 'clear',
+      '.': 'decimal'
+    };
+
+    if (keyMap[key]) {
+      selector = `[data-action="${keyMap[key]}"]`;
+    }
+  }
+
+  const btn = document.querySelector(selector);
+    if (btn) {
+      btn.classList.add('active');
+      setTimeout(() => btn.classList.remove('active'), 100);
+    }
+});
+
