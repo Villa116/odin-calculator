@@ -3,6 +3,7 @@ let secondOperand = null;
 let currentOperator = null;
 let displayValue = '0';
 let waitingForSecondOperand = false;
+let isResult = false;
 
 const container = document.querySelector('.container');
 const display = document.querySelector('.display');
@@ -30,6 +31,43 @@ function handleAction(action) {
       firstOperand = null;
       secondOperand = null;
       currentOperator = null;
+      isResult = false;
+      break;
+
+    case 'delete':
+      if(isResult || waitingForSecondOperand) return;
+
+      if (displayValue.length > 1) {
+        displayValue = displayValue.slice(0, -1);
+      } else {
+        displayValue = '0';
+      }
+      break;
+    
+    case 'percentage':
+      let percent = Number(displayValue) / 100;
+
+      displayValue = String(roundResult(percent));
+      isResult = true;
+      break;
+    
+    case 'squareRoot':
+      if (Number(displayValue) < 0) {
+        displayValue = "Error";
+      } else {
+        displayValue = String(roundResult(Math.sqrt(Number(displayValue))));
+      }
+      isResult = true;
+      break;
+    
+    case 'square':
+      let squared = Number(displayValue) ** 2;
+      displayValue = String(roundResult(squared));
+      isResult = true;
+      break;
+
+    case 'toggle':
+      displayValue = String(Number(displayValue) * -1);
       break;
 
     case 'decimal':
@@ -43,30 +81,43 @@ function handleAction(action) {
         displayValue += '.';
       } 
       break;
+    
+    case 'pi':
+      displayValue = String(roundResult(Math.PI));
+      isResult = true;
+      break;
 
     case 'add':
     case 'subtract':
     case 'multiply':
     case 'divide':
+    case 'exponent':
       handleOperator(action);
       break;
 
     case 'calculate':
       if (currentOperator && firstOperand !== null) {
         secondOperand = displayValue;
-        displayValue = String(operate(currentOperator, firstOperand, secondOperand));
+        const result = operate(currentOperator, firstOperand, displayValue);
+        
+        displayValue = typeof result === 'number'
+          ? String(roundResult(result))
+          : result;
 
         firstOperand = null;
         currentOperator = null;
+        waitingForSecondOperand = false;
+        isResult = true;
       }
         break;
   }
 }
 
 function handleNumber(num) {
-  if (waitingForSecondOperand) {
+  if (isResult || waitingForSecondOperand) {
     displayValue = num;
     waitingForSecondOperand = false;
+    isResult = false;
     return;
   }
 
@@ -78,6 +129,16 @@ function handleNumber(num) {
 }
 
 function handleOperator(nextOperator) {
+  isResult = false;
+  if (currentOperator && !waitingForSecondOperand) {
+    const result = operate(currentOperator, firstOperand, displayValue);
+
+    displayValue = typeof result === 'number'
+          ? String(roundResult(result))
+          : result;
+    display.innerText = displayValue;
+  }
+
   firstOperand = displayValue;
   currentOperator = nextOperator;
   waitingForSecondOperand = true;
@@ -111,9 +172,16 @@ function operate(action, a, b) {
     case 'divide':
       if(secondNum === 0) return "LOL NO"
       return divide(firstNum, secondNum);
+
+    case 'exponent':
+      return Math.pow(firstNum, secondNum);
   
     default:
       return "Error";
   }
+}
+
+function roundResult(num) {
+  return Math.round(num * 10**7) / 10**7;
 }
 
