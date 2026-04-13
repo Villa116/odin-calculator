@@ -68,6 +68,10 @@ html, body {
   transform: scale(0.95);
 }
 
+.btn:hover {
+  background-color: greenyellow;
+}
+
 .operator {
   background-color: #FFCC00;
 }
